@@ -1,0 +1,12 @@
+const router = require('express').Router()
+const { getSingleCategory, createCategory, getCategory, deleteCategory, updateCategory } = require('../controllers/categoryController.js')
+const checkAuthAdmin = require('../middleware/checkAuthAdmin')
+const checkAuth = require('../middleware/checkAuth')
+router.route('/category')
+    .get(getCategory)
+    .post(checkAuth, checkAuthAdmin, createCategory)
+router.route('/category/:id')
+    .patch(checkAuth, checkAuthAdmin, updateCategory)
+    .delete(checkAuth, checkAuthAdmin, deleteCategory)
+    .get(getSingleCategory)
+module.exports = router
