@@ -1,5 +1,4 @@
-import React, { useContext, useState } from 'react'
-import { GlobalState } from '../../GlobalState'
+import React, { useContext, useEffect, useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import AdbIcon from '@mui/icons-material/Adb';
@@ -9,7 +8,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NavLinks from './NavLinks';
 import Slider from './Slider';
-
+import { deepPurple } from '@mui/material/colors'
+import { getUserInfo } from '../../action/auth';
+import { AuthContext } from '../../context/auth-context';
+import { useDispatch, useSelector } from 'react-redux';
 const StyledMenuItem = styled(MenuItem)({
     display: 'flex',
     flexDirection: 'row',
@@ -17,6 +19,15 @@ const StyledMenuItem = styled(MenuItem)({
 })
 
 const Header = () => {
+    const { token } = useContext(AuthContext)
+    const { userInfo } = useSelector(state => state?.auth)
+    const dispatch = useDispatch()
+    useEffect(() => {
+        if (token) {
+            dispatch(getUserInfo())
+        }
+    }, [token, dispatch])
+
     const [anchorElUser, setAnchorElUser] = useState(null)
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -27,13 +38,13 @@ const Header = () => {
     };
 
     const [openModal, setOpenModal] = useState(false)
-    const value = useContext(GlobalState)
     const handleOpen = () => {
         setOpenModal(true)
     }
     const handleClose = () => {
         setOpenModal(false)
     }
+
     return (
         <>
             <Slider openModal={openModal} handleClose={handleClose} />
@@ -53,50 +64,54 @@ const Header = () => {
                             <NavLinks />
                         </Box>
 
-                        <Box>
-                            <Tooltip title='Account settings' onClick={handleOpenUserMenu}>
-                                <IconButton>
-                                    <Avatar alt='Jennifer Lawrence' src='https://nld.mediacdn.vn/thumb_w/540/2014/Jennifer-Lawrence-promoting-Mockingjay-Part-1-in-Cannes-2014-640x447-126dc.jpg' />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                disableScrollLock={true}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem onClick={handleCloseUserMenu}>
+                        {token &&
+                            <Box>
+                                <Tooltip title='Account settings' onClick={handleOpenUserMenu}>
                                     <IconButton>
-                                        <AccountCircleIcon />
+                                        <Avatar sx={{ background: deepPurple[600] }}>
+                                            {userInfo?.name?.charAt(0).toUpperCase()}
+                                        </Avatar>
                                     </IconButton>
-                                    <Typography textAlign='center'>Accounts</Typography>
-                                </StyledMenuItem>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    disableScrollLock={true}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    <StyledMenuItem onClick={handleCloseUserMenu}>
+                                        <IconButton>
+                                            <AccountCircleIcon />
+                                        </IconButton>
+                                        <Typography textAlign='center'>Accounts</Typography>
+                                    </StyledMenuItem>
 
-                                <StyledMenuItem onClick={handleCloseUserMenu}>
-                                    <IconButton>
-                                        <SettingsIcon />
-                                    </IconButton>
-                                    <Typography textAlign='center'>Setting</Typography>
-                                </StyledMenuItem>
+                                    <StyledMenuItem onClick={handleCloseUserMenu}>
+                                        <IconButton>
+                                            <SettingsIcon />
+                                        </IconButton>
+                                        <Typography textAlign='center'>Setting</Typography>
+                                    </StyledMenuItem>
 
-                                <StyledMenuItem onClick={handleCloseUserMenu}>
-                                    <IconButton>
-                                        <LogoutIcon />
-                                    </IconButton>
-                                    <Typography textAlign='center'>Logout</Typography>
-                                </StyledMenuItem>
-                            </Menu>
-                        </Box>
+                                    <StyledMenuItem onClick={handleCloseUserMenu}>
+                                        <IconButton>
+                                            <LogoutIcon />
+                                        </IconButton>
+                                        <Typography textAlign='center'>Logout</Typography>
+                                    </StyledMenuItem>
+                                </Menu>
+                            </Box>
+                        }
                     </Box>
                 </Toolbar>
             </AppBar>

@@ -32,7 +32,7 @@ const getProducts = async (req, res, next) => {
             filters = filters?.split(',')?.forEach(item => {
                 const [field, operator, value] = item?.split('-')
                 if (options.includes(field)) {
-                    queryObject[field] = { ...queryObject[field] ,[operator]: Number(value) }
+                    queryObject[field] = { ...queryObject[field], [operator]: Number(value) }
                 }
             });
         }
@@ -50,13 +50,15 @@ const getProducts = async (req, res, next) => {
 
         const page = Number(req?.query?.page) || 1
         const limit = Number(req?.query?.limit) || 10
-        const skip = (page - 1) * limit
+        const skip = (Number(page) - 1) * limit
 
         result = result.skip(skip).limit(limit)
 
         const products = await result
 
-        res.status(200).json({ products })
+        const total = await Product.countDocuments()
+
+        res.status(200).json({ products, currentPage: Number(page), numberOfPage: Math.ceil(total / limit) })
     } catch (error) {
         return res.status(500).json({ msg: error.message || 'Something went wrong' })
     }

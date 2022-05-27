@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Badge, IconButton, Box, Button, styled, Tooltip } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginIcon from '@mui/icons-material/Login';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import ShopIcon from '@mui/icons-material/Shop';
+import { AuthContext } from '../../context/auth-context';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { logout, getUserInfo } from '../../action/auth';
+import { useDispatch, useSelector } from 'react-redux';
 const NavLinks = (props) => {
+    const { userInfo } = useSelector(state => state?.auth)
+    const navigate = useNavigate()
+    const auth = useContext(AuthContext)
+    const dispatch = useDispatch()
     const StyledButton = styled(Button)({
         color: 'white',
         transition: '0.5s',
@@ -18,11 +26,20 @@ const NavLinks = (props) => {
         justifyContent: 'flex-start',
         backgroundColor: props.slide ? 'green' : ''
     })
+    const handleLogout = () => {
+        dispatch(logout(navigate))
+        auth.logout()
+    }
+    useEffect(() => {
+        if (auth?.token) {
+            dispatch(getUserInfo())
+        }
+    }, [auth])
     return (
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
             <IconButton component={Link} to='/cart'>
                 <Tooltip title='Cart'>
-                    <Badge badgeContent="0" color='error'>
+                    <Badge badgeContent={auth?.cart ? `${auth?.cart.length}` : '0'} color='error'>
                         <ShoppingCartIcon sx={{ color: 'white' }} />
                     </Badge>
                 </Tooltip>
@@ -30,9 +47,15 @@ const NavLinks = (props) => {
 
             <StyledButton component={Link} to='/products' startIcon={<ShopIcon />} variant="outlined">Products</StyledButton>
 
-            <StyledButton component={Link} to='/login' startIcon={<LoginIcon />} variant="outlined">Login</StyledButton>
-
-            <StyledButton component={Link} to='/register' startIcon={<HowToRegIcon />} variant="outlined">Register</StyledButton>
+            {
+                !auth?.token ?
+                    <>
+                        <StyledButton component={Link} to='/login' startIcon={<LoginIcon />} variant="outlined">Login</StyledButton>
+                        <StyledButton component={Link} to='/register' startIcon={<HowToRegIcon />} variant="outlined">Register</StyledButton>
+                    </>
+                    :
+                    <StyledButton startIcon={<LogoutIcon />} variant="outlined" onClick={handleLogout}>Logout</StyledButton>
+            }
         </Box>
     )
 }

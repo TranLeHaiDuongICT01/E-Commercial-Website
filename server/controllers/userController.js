@@ -27,7 +27,7 @@ const register = async (req, res, next) => {
             path: '/user/refresh_token'
         })
 
-        return res.status(201).json({ accessToken: token, user: newUser._id })
+        return res.status(201).json({ accessToken: token, user: newUser._id, role: newUser.role, cart: newUser.cart })
 
     } catch (error) {
         return res.status(500).json({ msg: error.message || 'Something went wrong' })
@@ -55,7 +55,7 @@ const login = async (req, res, next) => {
             path: '/user/refresh_token'
         })
 
-        return res.status(201).json({ accessToken: token, user: user._id })
+        return res.status(201).json({ accessToken: token, user: user._id, role: user.role, cart: user.cart })
 
     } catch (error) {
         return res.status(500).json({ msg: error.message || 'Something went wrong' })
@@ -105,10 +105,36 @@ const getUser = async (req, res, next) => {
     }
 }
 
+const addToCart = async (req, res, next) => {
+    const { cart } = req.body
+    try {
+        if (!req.user) {
+            return res.status(402).json({ msg: 'Unauthenticated' })
+        }
+        const id = req?.user?.user
+        const user = await Users.findById(id).select('-password')
+        if (!user || user?.length === 0) {
+            return res.status(404).json({ msg: `User with id ${id} not found` })
+        }
+
+        const cartProduct = user?.cart?.filter(cartItem => cartItem.productId === cart.productId)
+
+        if (cartProduct && cartProduct.length > 0) {
+            return res.status(200).json({ cartProduct })
+        }
+
+        return res.status(200).json({ user })
+
+    } catch (error) {
+        return res.status(500).json({ msg: error.message || 'Something went wrong' })
+    }
+}
+
 module.exports = {
     register,
     login,
     refreshToken,
     logout,
-    getUser
+    getUser,
+    addToCart
 }

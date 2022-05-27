@@ -1,17 +1,25 @@
-import React, { useEffect, useContext } from 'react'
-import { Container, Grid, CardActions, Paper, TextField, Typography, CardMedia, Button } from '@mui/material'
+import React, { useContext, useState } from 'react'
+import { Container, Grid, Typography, CardMedia, Button } from '@mui/material'
 import { useParams, Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { GlobalState } from '../../../GlobalState.js'
+import { useSelector } from 'react-redux'
 import ProductItem from './ProductItem'
+import ModalMessage from '../../Modal/ModalMessage'
 import './productDetails.css'
+import { AuthContext } from '../../../context/auth-context'
 const ProductDetails = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const { id } = useParams()
   const { products } = useSelector(state => state.products)
   const product = products?.filter(product => product._id === id)[0]
-  const state = useContext(GlobalState)
   const relatedProducts = products?.filter(item => item.category === product.category && item._id !== id)
-  console.log(relatedProducts);
+  const auth = useContext(AuthContext)
+  const HandleAddToCart = () => {
+    if (!auth?.token) {
+      handleOpen()
+    }
+  }
   return (
     product &&
     <Container>
@@ -37,7 +45,7 @@ const ProductDetails = () => {
                     background: '#ccc',
                     color: 'black'
                   }
-                }} component={Link} to='/cart' className='cart'>Add To Cart</Button>
+                }} onClick={HandleAddToCart} className='cart'>Add To Cart</Button>
 
                 <Button fullWidth sx={{
                   background: 'black',
@@ -49,6 +57,7 @@ const ProductDetails = () => {
                   }
                 }} component={Link} to='/cart' className='cart'>Buy Now</Button>
               </div>
+              <ModalMessage handleClose={handleClose} open={open} />
             </div>
 
           </Grid>
@@ -56,14 +65,14 @@ const ProductDetails = () => {
       </Container>
       <Container>
         <Typography variant='h5'>Related Products</Typography>
-        <Grid container spacing={3} sx={{marginBottom: '20px', marginTop: '5px'}}>
+        <Grid container spacing={3} sx={{ marginBottom: '20px', marginTop: '5px' }}>
           {
             relatedProducts?.map(product => (
               <ProductItem key={product._id} product={product} />
             ))
           }
-      </Grid>
-    </Container>
+        </Grid>
+      </Container>
     </Container >
   )
 }
