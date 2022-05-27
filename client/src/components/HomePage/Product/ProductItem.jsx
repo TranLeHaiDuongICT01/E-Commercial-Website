@@ -17,11 +17,11 @@ const ProductItem = ({ product }) => {
                     <CardMedia component='img' sx={{ height: '200px', objectFit: 'cover' }} image={product.images.url} alt={product.title} />
                     <CardContent>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant='h4'>{product.title}</Typography>
+                            <Typography variant='h5' fontWeight='bold'>{`${product.title.charAt(0).toUpperCase()}${product.title.slice(1)}`}</Typography>
                             <Typography variant='subtitle2' color='primary' fontSize='20px'>$ {product.price}</Typography>
                         </div>
                         <Typography variant='body2' color='text.secondary'>
-                            {product.description}
+                            {product.content}
                         </Typography>
                     </CardContent>
 

@@ -9,12 +9,11 @@ API.interceptors.request.use((req) => {
 export const getAllProducts = createAsyncThunk(
     'GET_ALL',
     async () => {
-        // console.log('Hello');
         const { data } = await API.get(`/api/product`)
         return data.products
-        // return fetch("http://localhost:5000/api/product").then((res) => res.json())
     }
 )
+
 const productSlice = createSlice({
     name: 'products',
     initialState: {
@@ -31,7 +30,7 @@ const productSlice = createSlice({
         },
         [getAllProducts.rejected]: (state) => {
             state.status = 'failed'
-        }
+        },
     }
 })
 

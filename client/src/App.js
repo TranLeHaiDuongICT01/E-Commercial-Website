@@ -9,6 +9,7 @@ import Register from './components/Auth/Register'
 import NotFound from './utils/NotFound'
 import { useDispatch } from 'react-redux'
 import { getAllProducts } from './reducers/products'
+import ProductDetails from './components/HomePage/Product/ProductDetails'
 const App = () => {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -25,6 +26,7 @@ const App = () => {
           <Route exact path='/cart' element={<Cart />} />
           <Route exact path='/products' element={
             <Navigate to='/' replace />} />
+          <Route exact path='/products/:id' element={<ProductDetails />} />
           <Route exact path='*' element={<NotFound />} />
         </Routes>
       </Router>
