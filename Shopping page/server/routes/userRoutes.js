@@ -1,0 +1,11 @@
+const router = require("express").Router()
+const { register, refreshToken, getUserHistory, login, logout, getUser, updateUser } = require('../controllers/userController')
+const checkAuth = require('../middleware/checkAuth')
+router.post('/register', register)
+router.get('/refresh_token', refreshToken)
+router.post('/login', login)
+router.get('/logout', logout)
+router.get('/infor', checkAuth, getUser)
+router.patch('/update', checkAuth, updateUser)
+router.get('/history', checkAuth, getUserHistory)
+module.exports = router
