@@ -12,6 +12,7 @@ const OrderHistory = () => {
     const { payments } = useSelector(state => state.payment)
     useEffect(() => {
         if (auth?.token) dispatch(getPayments())
+        console.log(auth?.token);
     }, [auth?.userId, location])
     if (!auth?.token) {
         return (

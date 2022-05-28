@@ -1,9 +1,12 @@
 import React from 'react'
-import { Container, Grid } from '@mui/material'
+import { Container, Grid, CircularProgress } from '@mui/material'
 import { useSelector } from 'react-redux'
 import ProductItem from './Product/ProductItem'
 const HomePage = () => {
-    const { products } = useSelector(state => state.products)
+    const { products, isLoading } = useSelector(state => state.products)
+    if (isLoading) {
+        return <CircularProgress />
+    }
     return (
         <Container sx={{ marginBottom: '20px' }}>
             <Grid container spacing={4} sx={{ marginTop: '7px' }}>

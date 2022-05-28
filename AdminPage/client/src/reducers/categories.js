@@ -1,7 +1,11 @@
-import { CREATE_CATEGORY, DELETE_CATEGORY, GET_CATEGORIES, GET_SINGLE_CATEGORY, UPDATE_CATEGORY } from "../utils/constantType";
+import { CREATE_CATEGORY, DELETE_CATEGORY, END_LOADING, GET_CATEGORIES, GET_SINGLE_CATEGORY, START_LOADING, UPDATE_CATEGORY } from "../utils/constantType";
 
-const reducer = (state = { categories: [] }, action) => {
+const reducer = (state = { isLoading: true, categories: [] }, action) => {
     switch (action.type) {
+        case START_LOADING:
+            return { ...state, isLoading: true }
+        case END_LOADING:
+            return { ...state, isLoading: false }
         case GET_CATEGORIES:
             return {
                 ...state,

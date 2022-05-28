@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { Container, Grid, Typography, CardMedia, Button } from '@mui/material'
+import { Container, Grid, CardMedia, Button, CircularProgress } from '@mui/material'
 import { useParams, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import ProductItem from './ProductItem'
 import ModalMessage from '../Modal/ModalMessage'
 import './productDetails.css'
 import { AuthContext } from '../../context/auth-context'
@@ -11,13 +10,16 @@ const ProductDetails = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { id } = useParams()
-  const { products } = useSelector(state => state.products)
+  const { products, isLoading } = useSelector(state => state.products)
   const product = products?.filter(product => product._id === id)[0]
   const auth = useContext(AuthContext)
   const HandleAddToCart = () => {
     if (!auth?.token) {
       handleOpen()
     }
+  }
+  if (isLoading) {
+    return <CircularProgress />
   }
   return (
     product &&
