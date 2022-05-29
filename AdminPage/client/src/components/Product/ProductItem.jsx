@@ -3,15 +3,18 @@ import {
     Grid, Card, CardMedia,
     CardContent, Typography, Paper, CardActions, Button
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import ModalMessage from '../Modal/ModalMessage';
 import EditIcon from '@mui/icons-material/Edit';
 import { AuthContext } from '../../context/auth-context';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { deleteProduct } from '../../action/products'
+import axios from 'axios'
+import { baseURL } from '../../utils/globalPort';
 const ProductItem = ({ product }) => {
     const auth = useContext(AuthContext)
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -19,10 +22,26 @@ const ProductItem = ({ product }) => {
     const handleDelete = () => {
         if (!auth?.token) {
             handleOpen()
+            return
         }
 
+        if (window.confirm('Are you sure to delete this product')) {
+            dispatch(deleteProduct(product._id))
+            axios.post(`${baseURL}/api/destroy`, { public_id: product?.images?.public_id }, {
+                headers: {
+                    Authorization: `Bearer ${auth?.token}`
+                }
+            })
+        }
 
+    }
 
+    const handleEdit = () => {
+        if (!auth?.token) {
+            handleOpen()
+            return
+        }
+        navigate(`/edit/${product._id}`)
     }
 
     return (
@@ -44,7 +63,7 @@ const ProductItem = ({ product }) => {
                     </CardContent>
 
                     <CardActions disableSpacing sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Button startIcon={<EditIcon />} component={Link} to={`/edit/${product._id}`} variant='outlined'>Edit</Button>
+                        <Button startIcon={<EditIcon />} onClick={handleEdit} variant='outlined'>Edit</Button>
                         <Button startIcon={<DeleteIcon />} color='error' onClick={handleDelete} variant='outlined'>Delete</Button>
                     </CardActions>
                 </Card>

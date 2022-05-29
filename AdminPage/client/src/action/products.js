@@ -41,6 +41,7 @@ export const updateProduct = (id, product) => async (dispatch) => {
         dispatch(({ type: START_LOADING }))
         const { data } = await api.updateProduct(id, product)
         dispatch({ type: UPDATE_PRODUCT, payload: data.product })
+        dispatch(({ type: END_LOADING }))
     } catch (error) {
         console.log(error);
         window.alert(JSON.stringify(error?.response?.data?.msg))
@@ -50,9 +51,11 @@ export const updateProduct = (id, product) => async (dispatch) => {
 
 export const deleteProduct = (id) => async (dispatch) => {
     try {
+        console.log(id);
         dispatch(({ type: START_LOADING }))
         const { data } = await api.deleteProduct(id)
         dispatch({ type: DELETE_PRODUCT, payload: data.product })
+        dispatch({ type: END_LOADING })
     } catch (error) {
         console.log(error);
         window.alert(JSON.stringify(error?.response?.data?.msg))

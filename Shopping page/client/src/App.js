@@ -4,14 +4,14 @@ import Header from './components/Header/Header'
 import HomePage from './components/HomePage/HomePage'
 import Cart from './components/Cart/Cart'
 import Auth from './components/Auth/Auth'
-import { useDispatch, useSelector } from 'react-redux'
-import { getProducts } from './action/products'
+import { useDispatch } from 'react-redux'
 import { getUserInfo } from './action/auth'
 import { AuthContext } from './context/auth-context'
 import { useAuth } from './hook/auth-hook'
 import ProductDetails from './components/HomePage/Product/ProductDetails'
 import OrderHistory from './components/History/OrderHistory'
 import OrderDetail from './components/History/OrderDetail'
+import { getCategories } from './action/categories'
 const App = () => {
 
   const { token, login, logout, userId, cart, setCart } = useAuth()
@@ -24,9 +24,12 @@ const App = () => {
       }
       fetchUser()
     }
-  }, [token, dispatch])
+  }, [token, dispatch, setCart])
+
   useEffect(() => {
-    dispatch(getProducts())
+    // dispatch(getProducts())
+    
+    dispatch(getCategories())
   }, [dispatch])
 
 

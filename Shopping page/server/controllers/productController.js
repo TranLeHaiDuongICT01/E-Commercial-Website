@@ -4,6 +4,7 @@ const Product = require('../models/productModel')
 const getProducts = async (req, res, next) => {
     const { title, price, category, sold, sort, fields, numericFilter } = req.query
     try {
+        console.log(req.query);
         const queryObject = {}
         if (title) {
             queryObject.title = { $regex: title, $options: 'i' }
@@ -36,8 +37,8 @@ const getProducts = async (req, res, next) => {
                 }
             });
         }
-        // console.log(queryObject);
         let result = Product.find(queryObject)
+        let result2 = Product.find(queryObject)
         if (sort) {
             const sortList = sort?.split(',')?.join(' ')
             result = result.sort(sortList)
@@ -52,11 +53,16 @@ const getProducts = async (req, res, next) => {
         const limit = Number(req?.query?.limit) || 12
         const skip = (Number(page) - 1) * limit
 
+        // console.log(category, page);
+
         result = result.skip(skip).limit(limit)
+
+        const productsCount = await result2
 
         const products = await result
 
-        const total = await Product.countDocuments()
+        const total = productsCount.length
+
 
         res.status(200).json({ products, currentPage: Number(page), numberOfPage: Math.ceil(total / limit) })
     } catch (error) {
@@ -111,6 +117,7 @@ const deleteProduct = async (req, res, next) => {
         if (!product) {
             return res.status(404).json({ msg: `Product with id ${id} not found` })
         }
+        console.log("Delete");
         return res.status(200).json({ product })
     } catch (error) {
         return res.status(500).json({ msg: error.message || 'Something went wrong' })

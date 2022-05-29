@@ -23,3 +23,5 @@ export const USER_HISTORY = 'USER_HISTORY'
 export const UPDATE_USER = 'UPDATE_USER'
 
 export const PAYMENT = 'PAYMENT'
+
+export const GET_CATEGORIES = 'GET_CATEGORIES'

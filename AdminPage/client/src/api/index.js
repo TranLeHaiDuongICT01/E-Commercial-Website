@@ -17,7 +17,7 @@ export const createProduct = (product) => API.post('/api/product', product)
 
 export const updateProduct = (id, product) => API.patch(`/api/product/${id}`, product)
 
-export const deleteProduct = (id) => API.patch(`/api/product/${id}`)
+export const deleteProduct = (id) => API.delete(`/api/product/${id}`)
 
 export const login = (user) => API.post(`/user/login`, user)
 

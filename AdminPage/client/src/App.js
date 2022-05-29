@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { getProducts } from './action/products'
 import { AuthContext } from './context/auth-context'
 import { useAuth } from './hook/auth-hook'
 import Header from './components/Header'
@@ -18,7 +17,7 @@ const App = () => {
   const { token, login, logout, userId } = useAuth()
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getProducts())
+    // dispatch(getProducts())
 
     dispatch(getCategories())
   }, [dispatch])
