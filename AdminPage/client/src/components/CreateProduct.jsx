@@ -1,16 +1,33 @@
 import { Box, Button, CardMedia, Container, FormControl, Input, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useContext, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { baseURL } from '../utils/globalPort'
+import { AuthContext } from '../context/auth-context'
+import { createProduct } from '../action/products'
+import axios from 'axios'
 const CreateProduct = () => {
+  const dispatch = useDispatch()
+  const auth = useContext(AuthContext)
   const { categories } = useSelector(state => state.category)
   const [data, setData] = useState({
     title: '', price: '', description: '',
-    content: '', images: '', category: ''
+    content: '', category: ''
   })
+  const [fileImage, setFileImage] = useState()
   const [image, setImage] = useState('')
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(data);
+    const formData = new FormData()
+    formData.append('file', fileImage)
+    const { data: imageData } = await axios.post(`${baseURL}/api/upload`, formData, {
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: 'Bearer ' + auth?.token
+      }
+    })
+    dispatch(createProduct({ ...data, images: imageData }))
+    window.alert('Create product successfully')
+    handleClear()
   }
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value })
@@ -40,13 +57,24 @@ const CreateProduct = () => {
 
     reader.readAsDataURL(file)
 
+    setFileImage(file)
+
   }
   const handleDeleteImage = (e) => {
-    e.preventDefault()
-    console.log("Delete file");
+    if (e)
+      e.preventDefault()
     setImage('')
-    setData({ ...data, images: {} })
+    setFileImage(null)
     document.getElementById('file_up').value = ''
+  }
+
+  const handleClear = (e) => {
+    if (e) e.preventDefault()
+    handleDeleteImage()
+    setData({
+      title: '', price: '', description: '',
+      content: '', category: ''
+    })
   }
   return (
     <Container sx={{ marginTop: '20px' }}>
@@ -84,7 +112,7 @@ const CreateProduct = () => {
             </div>
             <Input fullWidth disableUnderline type="file" name='file' id='file_up' onChange={handleChangeFile} required />
             <Button variant='contained' type='submit' color='primary' fullWidth>Submit</Button>
-            <Button variant='contained' color='error' fullWidth>Clear</Button>
+            <Button variant='contained' color='error' onClick={handleClear} fullWidth>Clear</Button>
           </form>
         </Box>
       </Paper>

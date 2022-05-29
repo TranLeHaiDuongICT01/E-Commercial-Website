@@ -9,7 +9,7 @@ API.interceptors.request.use((req) => {
     return req
 })
 
-export const getProducts = () => API.get(`/api/product`)
+export const getProducts = (query) => API.get(`/api/product?${query ? query : ''}`)
 
 export const getSingleProduct = (id) => API.get(`/api/product/${id}`)
 

@@ -36,15 +36,17 @@ const ProductItem = ({ product }) => {
 
     return (
         <Grid item xs={12} sm={6} lg={4} style={{
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            // minHeight: '500px'
         }}>
-            <Paper elevation={6}>
-                <Card>
+            <ModalMessage handleClose={handleClose} open={open} />
+            <Paper elevation={6} sx={{ height: '100%' }}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <CardMedia component='img' sx={{ height: '300px', objectFit: 'cover' }} image={product.images.url} alt={product.title} />
                     <CardContent>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight='bold'>{`${product.title.charAt(0).toUpperCase()}${product.title.slice(1)}`}</Typography>
-                            <Typography variant='subtitle2' color='primary' fontSize='20px'>$ {product.price}</Typography>
+                            <Typography variant='h5' fontSize='18px' fontWeight='bold'>{`${product.title.charAt(0).toUpperCase()}${product.title.slice(1)}`}</Typography>
+                            <Typography variant='subtitle2' color='primary' fontSize='13px'>$ {product.price}</Typography>
                         </div>
                         <Typography sx={{ marginTop: '10px' }} variant='body2' color='text.secondary'>
                             {product.content}
@@ -59,7 +61,7 @@ const ProductItem = ({ product }) => {
                         </Tooltip>
                         <Button startIcon={<AddIcon />} onClick={handleAddToCart} variant='outlined'>Add to cart</Button>
                     </CardActions>
-                    <ModalMessage handleClose={handleClose} open={open} />
+
                 </Card>
             </Paper>
         </Grid>
