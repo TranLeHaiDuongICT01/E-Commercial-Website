@@ -8,9 +8,8 @@ import ShopIcon from '@mui/icons-material/Shop';
 import { AuthContext } from '../../context/auth-context';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { logout, getUserInfo } from '../../action/auth';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 const NavLinks = (props) => {
-    const { userInfo } = useSelector(state => state?.auth)
     const navigate = useNavigate()
     const auth = useContext(AuthContext)
     const dispatch = useDispatch()
@@ -18,13 +17,17 @@ const NavLinks = (props) => {
         color: 'white',
         transition: '0.5s',
         '&:hover': {
-            color: '#ccc'
+            color: '#ccc',
+            backgroundColor: props.slide ? '#232a34' : '',
+            border: props.slide ? '1px solid #232a34' : '',
         },
         fontSize: '12px',
         padding: 6,
         width: props.slide ? '100%' : '',
         justifyContent: 'flex-start',
-        backgroundColor: props.slide ? 'green' : ''
+        backgroundColor: props.slide ? '#232a34' : '',
+        variant: 'contained',
+        border: props.slide ? '1px solid #232a34' : '',
     })
     const handleLogout = () => {
         dispatch(logout(navigate))
@@ -34,9 +37,9 @@ const NavLinks = (props) => {
         if (auth?.token) {
             dispatch(getUserInfo())
         }
-    }, [auth])
+    }, [auth, dispatch])
     return (
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: props.slide ? '20px' : '10px'}}>
             <IconButton component={Link} to='/cart'>
                 <Tooltip title='Cart'>
                     <Badge badgeContent={auth?.cart ? `${auth?.cart.length}` : '0'} color='error'>

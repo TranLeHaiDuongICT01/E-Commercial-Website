@@ -17,6 +17,7 @@ export const useAuth = () => {
     const logout = useCallback(() => {
         setToken(null)
         setTokenExpirationDate(null)
+        setCart([])
         setUserId(null)
         localStorage.removeItem('user')
     }, [])

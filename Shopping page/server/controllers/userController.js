@@ -138,7 +138,7 @@ const getUserHistory = async (req, res, next) => {
         if (!user || user?.length === 0) {
             return res.status(404).json({ msg: `User with id ${id} not found` })
         }
-        const history = await Payment.find({ user_id: id })
+        const history = await Payment.find({ user_id: id }).sort('-createdAt')
         return res.status(200).json({ history })
     } catch (error) {
         return res.status(500).json({ msg: error.message || 'Something went wrong' })

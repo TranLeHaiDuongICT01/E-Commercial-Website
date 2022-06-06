@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box, Modal, Backdrop, Fade } from '@mui/material'
+import { Box, Modal, Backdrop, Fade,IconButton } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close';
 import NavLinks from './NavLinks'
 const style = {
     position: 'absolute',
@@ -12,7 +13,8 @@ const style = {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
-    paddingTop: '250px'
+    paddingTop: '250px',
+    width: '100%',
 
 };
 const Slider = (props) => {
@@ -27,6 +29,9 @@ const Slider = (props) => {
             }} sx={{ display: { xs: 'block', sm: 'none' } }}>
             <Fade in={props.openModal}>
                 <Box sx={{ ...style }}>
+                    <IconButton sx={{ top: 0, right: 0, color: 'white', position: 'fixed' }} onClick={props.handleClose}>
+                        <CloseIcon />
+                    </IconButton>
                     <NavLinks slide />
                 </Box>
             </Fade>

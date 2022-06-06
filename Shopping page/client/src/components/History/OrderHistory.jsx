@@ -1,18 +1,18 @@
 import React, { useContext, useEffect } from 'react'
 import { AuthContext } from '../../context/auth-context'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserHistory } from '../../action/payment'
-import { Button, Container, Typography } from '@mui/material'
+import { Button, CircularProgress, Container, Typography } from '@mui/material'
 const OrderHistory = () => {
-    const navigate = useNavigate()
     const location = useLocation()
     const auth = useContext(AuthContext)
     const dispatch = useDispatch()
-    const { payment } = useSelector(state => state.payment)
+    const { payment, isLoading } = useSelector(state => state.payment)
     useEffect(() => {
         if (auth?.token) dispatch(getUserHistory())
-    }, [auth?.userId, location])
+    }, [auth?.userId, location, auth?.token, dispatch])
+    if (isLoading) return <CircularProgress />
     if (!auth?.token) {
         return (
             <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>

@@ -31,6 +31,7 @@ const HomePage = () => {
 
         dispatch(getProducts(queryObject))
     }, [page, location, dispatch, category, sort, titleQuery])
+
     const { products, isLoading, numberOfPage } = useSelector(state => state.products)
     const { categories } = useSelector(state => state.category)
     const handleChange = (e) => {

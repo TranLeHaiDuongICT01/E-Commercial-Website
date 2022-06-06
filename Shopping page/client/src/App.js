@@ -27,12 +27,8 @@ const App = () => {
   }, [token, dispatch, setCart])
 
   useEffect(() => {
-    // dispatch(getProducts())
-    
     dispatch(getCategories())
   }, [dispatch])
-
-
   return (
     <AuthContext.Provider value={{ cart: cart, token: token, userId: userId, login: login, logout: logout, setCart: setCart }}>
       <Router>

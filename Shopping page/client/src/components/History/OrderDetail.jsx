@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { AuthContext } from '../../context/auth-context'
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserHistory } from '../../action/payment'
 import { Button, Container, Typography } from '@mui/material'
 const OrderDetail = () => {
-    const navigate = useNavigate()
     const location = useLocation()
     const auth = useContext(AuthContext)
     const dispatch = useDispatch()
@@ -13,7 +12,7 @@ const OrderDetail = () => {
     const { payment } = useSelector(state => state.payment)
     useEffect(() => {
         if (auth?.token) dispatch(getUserHistory())
-    }, [auth?.userId, location])
+    }, [auth?.userId, location, auth?.token, dispatch])
     if (!auth?.token) {
         return (
             <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>

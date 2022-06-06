@@ -1,11 +1,17 @@
-import {  END_LOADING, GET_CATEGORIES, START_LOADING } from "../utils/constantType";
+import { END_LOADING, GET_CATEGORIES, START_LOADING } from "../utils/constantType";
 
 const reducer = (state = { isLoading: true, categories: [] }, action) => {
     switch (action.type) {
         case START_LOADING:
-            return { ...state, isLoading: true }
+            return {
+                ...state,
+                isLoading: true
+            }
         case END_LOADING:
-            return { ...state, isLoading: false }
+            return {
+                ...state,
+                isLoading: false
+            }
         case GET_CATEGORIES:
             return {
                 ...state,

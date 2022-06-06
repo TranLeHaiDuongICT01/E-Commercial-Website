@@ -1,7 +1,17 @@
-import { AUTH, LOGOUT, GET_USER_INFO, UPDATE_USER } from "../utils/constantType";
+import { AUTH, LOGOUT, GET_USER_INFO, UPDATE_USER, START_LOADING, END_LOADING } from "../utils/constantType";
 
-const reducer = (state = { user: null }, action) => {
+const reducer = (state = { user: null, isLoading: true }, action) => {
     switch (action.type) {
+        case START_LOADING:
+            return {
+                ...state,
+                isLoading: true
+            }
+        case END_LOADING:
+            return {
+                ...state,
+                isLoading: false
+            }
         case AUTH:
             return {
                 ...state,
